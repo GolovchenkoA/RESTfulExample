@@ -1,0 +1,9 @@
+
+
+http://localhost:8080/RESTfulExample/rest/json/user/get
+http://localhost:8080/RESTfulExample/rest/json/user/post
+
+{
+"name": "UserName2",
+"surname": "UserSurname2"
+}
