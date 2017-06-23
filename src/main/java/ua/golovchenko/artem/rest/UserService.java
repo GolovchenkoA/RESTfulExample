@@ -1,5 +1,6 @@
 package ua.golovchenko.artem.rest;
 
+import ua.golovchenko.artem.DAO.UserDAO;
 import ua.golovchenko.artem.User;
 
 import javax.ws.rs.*;
@@ -11,40 +12,35 @@ import java.util.*;
  * Created by artem on 15.06.17.
  */
 
-@Path("/users")
+@Path("users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserService {
 
-    UserDAO userDAO = new UserDAO();
+    UserDAO userDAO = UserDAOInMemoryStab.getInstanhce();
 
     @GET
     public Collection<User> getAllUsers() {
 
+        System.out.println("findAll() query. /users");
         return userDAO.findAll();
     }
 
 /*    @GET
     @Path("{userid}")
-    public User getUser(@PathParam("userId") Integer userId) {
-        return UserDAO.getUser(userId);
+    public User get(@PathParam("userId") Integer userId) {
+        return UserDAO.get(userId);
     }*/
 
     @GET
     @Path("{id}")
     public Collection<User> getUser(@PathParam("id") Integer id) {
         Collection<User> users = new LinkedList<>();
-        users.add(userDAO.getUser(id));
+        users.add(userDAO.get(id));
+        System.out.println("Get user : " + userDAO.get(id));
         return users;
     }
 
-
-/*    @POST
-    public Response addUser(User user) {
-
-        userDAO.addUser(user);
-        return Response.ok(user).build();
-    }*/
 
 
     @GET
@@ -55,35 +51,32 @@ public class UserService {
     }
 
 
+    @POST
+    public void add(User user) {
 
-    // Database stab
-    class UserDAO{
-
-        private Map<Integer,User> users = new HashMap<Integer, User>();
-
-        UserDAO(){
-            users.put(1,new User(10,"UserName10","UserSurname10"));
-            users.put(2,new User(20,"UserName20","UserSurname20"));
-            users.put(3,new User(30,"UserName30","UserSurname30"));
-        }
-
-
-
-        public void addUser(User user){
-            users.put(user.getId(), user);
-        }
-
-        public User getUser(Integer userId){
-
-            return (User) users.get(userId);
-        }
-
-        public Collection<User> findAll(){
-            return users.values();
-        }
+        userDAO.update(user);
+        System.out.println("New user : " + user + " created");
+        //return Response.ok(user).build();
     }
 
+    @PUT
+    @Path("{id}")
+    public Response updateUser(User user) {
 
+        userDAO.update(user);
+        System.out.println("User updated : " + user);
+        return Response.ok(user).build();
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response removeUser(@PathParam("id") Integer id) {
+        userDAO.remove(id);
+        System.out.println("Deleted. User id: " + id);
+        return Response.noContent().build();
+
+    }
+/**/
 
 
 }

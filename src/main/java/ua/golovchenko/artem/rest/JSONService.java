@@ -30,7 +30,7 @@ public class JSONService {
 	}
 
 	@GET
-	@Path("/getUser")
+	@Path("/get")
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUser() {
 
